@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крош - История болезни</title>
+    <style>
+       
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; font-size: 13px; color:#212121 }
+        a {
+            color: #4285f4;
+        }
+        h1, h2 {
+            font-weight: 400;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 20px;
+        }
+        .header img {
+            max-width: 50%;
+            max-height: 300px;
+            border-radius: 10px;
+            background: #ddd;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+        }
+        .info {
+            margin-top: 10px;
+        }
+        .vaccination {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.7rem;
+        }
+        .vaccine-item {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            padding: 0.2rem;
+            border-radius: 5px;
+        }
+        .vaccine-item span {
+            margin: 0 0.5rem;
+        }
+        .history {
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+        @media (max-width: 600px) {
+            .header img {
+                max-width: 95%;
+                max-height: 100%;
+            }
+            .header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .vaccine-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .text-line {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .popup {
+            position: fixed;
+            width: 80%;
+            height: 80%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 20px;
+            display: none;
+            overflow: hidden;
+            border-radius: 8px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .popup img {
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .popup .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popup .close-btn {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .popup-content {
+            overflow-y: scroll;
+            max-height: calc(100% - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+        .highlight {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="header">
+            <img src="krosh.jpg" alt="Фото кота">
+            <div>
+                <h1>Крош</h1>
+                <p class="info">Кот. Метис. Дата рождения ≈ 12.02.2012.<br>Кастрирован.<br>Номер чипа: <a href="#">900233000212306</a></p>
+                <h2>Информация о прививках</h2>
+                <div class="vaccination">
+                    <div class="vaccine-item"><span>Бешенство</span> <span>nobivac</span> <span>26.05.2024</span></div>
+                    <div class="vaccine-item"><span>Паразиты</span> <span>Некст Гард комбо</span> <span>26.01.2025</span></div>
+                    <div class="vaccine-item"><span>Другие</span> <span>Nobivac tricat duo</span> <span>26.05.2024</span></div>
+                </div>
+            </div>
+        </div>
+
+        <h2>История болезни</h2>
+        <div class="history">
+
+    <section>
+        <h2>2012–2021 гг.</h2>
+        <p>Кот был подобран на улице в 2012 году и кастрирован. Жил в квартире с другими кошками (также подобранными). На протяжении всей жизни наблюдалась рвота раз в несколько дней (шерсть, еда). Точную периодичность определить было невозможно из-за других животных.</p>
+    </section>
+
+    <section>
+        <h2>2021 год</h2>
+        <p>Переехал жить отдельно. Рвота продолжалась с переменной частотой (от редких эпизодов до ежедневных). В рвоте присутствовала шерсть, еда, а на пустой желудок – пена.</p>
+    </section>
+
+    <section>
+        <h2 id="href1">Июль/Август 2022 года</h2>
+        <ul>
+            <li>Вакцинация, дегельминтизация, чипирование.</li>
+            <li>Проведены:
+               
+                <ul>
+                    <li><a href="#href1" class="text-line" onclick="openPopup(1)">УЗИ</a></li>
+                    <li><a href="#href1" class="text-line" onclick="openPopup(2)">Клинический и биохимический анализ крови</a></li>
+                    <li><a href="#href1" class="text-line" onclick="openPopup(7)">Тесты на вирусный лейкоз, коронавирус и вирус иммунодефицита кошек</a> (отрицательные)</li>
+                </ul>
+            </li>
+            <li>Так как УЗИ показало сильно увеличенные мезентериальные лимфоузлы врач порекомендовал взятие тонкоигольной биопсии</li>
+            <li>Для этой процедуры сдали <a href="#href1" class="text-line" onclick="openPopup(3)">ЭХО кг сердца</a>, и повторное <a href="#href1" class="text-line" onclick="openPopup(4)">УЗИ</a>.</li>
+            <li>По рекомендации врача проведена <a href="#href1" class="text-line" onclick="openPopup(5)">тонкоигольная биопсия</a>. </li>
+            <li>Предположительно коту ставили эндотрахеальную трубку и реанимировали во время наркоза</li>
+            <li>После процедуры ухудшилось состояние:
+                <ul>
+                    <li>Апатия</li>
+                    <li>Частые глотательные движения</li>
+                    <li>Резкая потеря веса</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 id="href2">Август 2022 года</h2>
+        <ul>
+            <li>Обращение в клинику 03-ВЕТ, <a href="#href2" class="text-line" onclick="openPopup(6)">назначение лечения</a></li>
+            <li><span class="highlight">21.08.2022</span> – начало лечения преднизолоном.</li>
+            <li>Улучшение состояния, набор веса, питание мясным детским питанием.</li>
+            <li><span class="highlight">31.08.2022</span> – повторный <a href="#href2" class="text-line" onclick="openPopup(8)">анализ крови</a>,<a href="#href2" class="text-line" onclick="openPopup(9)">тест на лейкоз</a> (на этот раз положительный результат, но решили перепроверить позже).</li>
+            <li>Кот активный, рвота редкая, стул нормальный.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 id="href3">Ноябрь 2022 года</h2>
+        <ul>
+            <li><span class="highlight">02.11.2022</span> – кот пережил перелет, после чего неделю чувствовал себя хорошо.</li>
+            <li><span class="highlight">12.11.2022</span> – переезд в другую квартиру.</li>
+            <li>3-я неделя после переезда – ежедневная рвота, снижение активности.</li>
+            <li><span class="highlight">29.11.2022</span> – сильное ухудшение:
+                <ul>
+                    <li>Рвота 6 раз за несколько часов</li>
+                    <li>Понос до 3 раз за ночь</li>
+                </ul>
+            </li>
+            <li>Обследования:
+                <ul>
+                    <li><a href="#href3" class="text-line" onclick="openPopup(11)">Анализ крови</a></li>
+                    <li>УЗИ (результаты не выдали/утеряны но со слов врачей:)</li>
+                    <ul>
+                        <li>Воспаление всех отделов ЖКТ</li>
+                        <li>Увеличенную вену, ведущую к воспаленному лимфоузлу.</li>
+                    </ul>
+                    <li>Экспресс-тест на иммунодефицит и вирусный лейкоз (отрицательные)</li>
+                </ul>
+            </li>
+            <li>Назначено лечение: капельницы, дексаметазон, серения, глюкоза, витамины.</li>
+            <li>Понос продолжался, но рвота прекратилась.</li>
+            <li>Постепенно отменяли серению, состояние улучшилось, но сохранялся понос.</li>
+            <li>Улучшение состояния</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 href="href4">Август 2024 года</h2>
+        <ul>
+            <li><span class="highlight">03.08.2024</span> – пропал аппетит, вечерняя рвота водой.</li>
+            <li><span class="highlight">04.08.2024</span> – укол серении, <a href="#href4" class="text-line" onclick="openPopup(10)">УЗИ</a>, <a href="#href4" class="text-line" onclick="openPopup(12)">анализы крови</a>, повышенная температура.</li>
+            <li><span class="highlight">05.08.2024</span> – отказ от еды, понос (до 10 раз в день, в том числе после питья), аппетита нет, попытка кормления вызывает рвотный рефлекс.</li>
+            <li>Начало капельниц:
+                <ul>
+                    <li>Sodium Chloride 0.9% – 40 мл</li>
+                    <li>Glucose Dextrose 5% – 20 мл</li>
+                    <li>Антибиотики (Ceftriaxone, Амоксициллин)</li>
+                    <li>Спазмолитики (Но-шпа)</li>
+                    <li>Противорвотные (Zondaron)</li>
+                </ul>
+            </li>
+            <li>Врачи подозревают клостридиоз.</li>
+            <li><span class="highlight">06.08.2024</span> – продолжение капельниц, улучшение состояния после капельниц и Но-шпы.</li>
+            <li><span class="highlight">08.08.2024</span> – Сдаем <a href="#href4" class="text-line" onclick="openPopup(14)">анализ крови</a></li>
+            <li><span class="highlight">12.08.2024</span> – Повторно сдаем <a href="#href4" class="text-line" onclick="openPopup(15)">анализ крови</a></li>
+            <li><span class="highlight">13.08.2024</span> – Смена врача продолжаем ездить к клинику бунеба для завершения курса назначенного ими и для сдачи анализов.</li>
+            <li><span class="highlight">14.08.2024</span> – Сдаем анализы: <a href="#href4" class="text-line" onclick="openPopup(16)">УЗИ</a> , <a href="#href4" class="text-line" onclick="openPopup(25)">Анализ крови</a>.
+                <Ul>
+                    <li>назначено амбулаторное лечение другим врачом. </li>
+                    <li>Тилозин</li>
+                    <li>Метронидазол</li>
+                    <li>Квамател</li>
+                    <li>Креон</li>
+                    <li>Преднизолон</li>
+                    <li>Гептрал</li>
+                    <li>Фолиевая кислота</li>
+                </Ul>
+            </li>
+            <li>Так же делаем <a href="#href4" class="text-line" onclick="openPopup(13)">рентген</a> и по утверждению врача там видна огромная опухоль.</li>
+            <li><span class="highlight">19.08.2024</span> – Сдаем <a href="#href4" class="text-line" onclick="openPopup(17)">анализ крови</a> для корректировки назначений.</li>
+            <li><span class="highlight">30.08.2024</span> – Проводим <a href="#href4" class="text-line" onclick="openPopup(18)">экспресс тест на лейкоз</a>(отрицательный).</li>
+        </section>
+            <section>
+                <h2 id="href5">Обследования и лечение после августа 2024 года</h2>
+            <ul>
+                <li><span class="highlight">04.09.2024</span> – Проводим <a href="#href5" class="text-line" onclick="openPopup(19)">цитологическое исследование крови</a>.</li>
+            <li><span class="highlight">08.11.2024</span> – Сдаем <a href="#href5" class="text-line" onclick="openPopup(20)">анализ крови</a>.</li>
+            <li><span class="highlight">16.12.2024</span> – Сдаем <a href="#href5" class="text-line" onclick="openPopup(21)">анализ крови</a>.</li>
+            <li>После лечения кот чувствует себя хорошо, но анализы крови остаются плохими.</li>
+            <li>Обращение к онкологу.</li>
+            <li><span class="highlight">22.01.2025</span> – проведены следующие анализы:
+                <ul>
+                    <li>
+                        <a href="#href5" class="text-line" onclick="openPopup(22)">Анализ крови</a>
+                    </li>
+                    <li>
+                        <a href="#href5" class="text-line" onclick="openPopup(23)">ЭХОкг сердца</a>
+                    </li>
+                    <li>
+                        <a href="#href5" class="text-line" onclick="openPopup(24)">УЗИ</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+
+        </div>
+    </div>
+<!-- 
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+    
+
+    <div class="popup" id="popup1">
+        <div class="popup-header">
+            <h2>УЗИ от 03.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="uzi_030822_1.jpg" alt="Image 1">
+            <img src="uzi_030822_2.jpg" alt="Image 2">
+            <img src="uzi_030822_3.jpg" alt="Image 3">
+        </div>
+    </div>
+
+    <div class="popup" id="popup2">
+        <div class="popup-header">
+            <h2>Клинический и биохимический анализ крови от 03.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_030822.jpg" alt="Image 1">
+            <img src="biochemicalblood_03.08.22.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="popup" id="popup3">
+        <div class="popup-header">
+            <h2>ЭХОкг сердца от 09.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="echo_090822_1.jpg" alt="Image 1">
+            <img src="echo_090822_2.jpg" alt="Image 1">
+        </div>
+    </div>
+    <div class="popup" id="popup4">
+        <div class="popup-header">
+            <h2>УЗИ от 12.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="uzi_120822.jpg" alt="Image 1">
+        </div>
+    </div>
+    <div class="popup" id="popup5">
+        <div class="popup-header">
+            <h2>Цитологическое исследование от 12.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="cytology.jpg" alt="Image 1">
+        </div>
+    </div>
+    <div class="popup" id="popup6">
+        <div class="popup-header">
+            <h2>Назначения от 21.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="naznachenie_210822.jpg" alt="Image 1">
+        </div>
+    </div>
+    <div class="popup" id="popup7">
+        <div class="popup-header">
+            <h2>ВИК, Лейкоз и коронавирус от 03.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="vir_030822.jpg" alt="Image 1">
+            <img src="korona_030822.jpg" alt="Image 2">
+        </div>
+    </div>
+    <div class="popup" id="popup8">
+        <div class="popup-header">
+            <h2>ОАК от 31.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_310822.jpg" alt="Image 1">
+        </div>
+    </div>
+    <div class="popup" id="popup9">
+        <div class="popup-header">
+            <h2>Лейкоз 31.08.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="leikoz_310822.jpg" alt="Image 1">
+        </div>
+    </div>
+    <div class="popup" id="popup10">
+        <div class="popup-header">
+            <h2>Узи от 04.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="uzi_040824_1.jpg" alt="Image 1">
+            <img src="uzi_040824_2.jpg" alt="Image 2">
+            <img src="uzi_040824_3.jpg" alt="Image 3">
+        </div>
+    </div>
+    <div class="popup" id="popup11">
+        <div class="popup-header">
+            <h2>Анализы крови от 29.11.2022</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_291122_1.jpg" alt="Image 1">
+            <img src="oak_291122_2.jpg" alt="Image 2">
+        </div>
+    </div>
+    <div class="popup" id="popup12">
+        <div class="popup-header">
+            <h2>Анализы крови от 04.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_040824_1.jpg" alt="Image 1">
+            <img src="oak_040824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+<!-- !!!!!!!!!!!!!!!
+!!!!!!!!!!!!!
+!!!!!!!!!!!!!! -->
+    <div class="popup" id="popup13">
+        <div class="popup-header">
+            <h2>Рентген от 14.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="suspected_tumor.jpg" alt="Image 1">
+        </div>
+    </div>
+
+    <div class="popup" id="popup14">
+        <div class="popup-header">
+            <h2>Анализы крови от 08.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_080824_1.jpg" alt="Image 1">
+            <img src="oak_080824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="popup" id="popup15">
+        <div class="popup-header">
+            <h2>Анализы крови от 12.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_120824.jpg" alt="Image 1">
+        </div>
+    </div>
+
+    <div class="popup" id="popup16">
+        <div class="popup-header">
+            <h2>УЗИ от 14.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="uzi_140824_1.jpg" alt="Image 1">
+            <img src="uzi_140824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="popup" id="popup17">
+        <div class="popup-header">
+            <h2>Анализы крови от 19.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_190824_1.jpg" alt="Image 1">
+            <img src="oak_190824_2.jpg" alt="Image 2">
+            <img src="oak_190824_3.jpg" alt="Image 3">
+        </div>
+    </div>
+
+    <div class="popup" id="popup18">
+        <div class="popup-header">
+            <h2>Экспресс тест на лейкоз от 30.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="leikoz_300824_1.jpg" alt="Image 1">
+            <img src="leikoz_300824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="popup" id="popup19">
+        <div class="popup-header">
+            <h2>Цитологическое исследование крови от 04.09.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="cytology_040924.jpg" alt="Image 1">
+        </div>
+    </div>
+
+    <div class="popup" id="popup20">
+        <div class="popup-header">
+            <h2>Анализ крови от 08.11.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_081124.jpg" alt="Image 1">
+        </div>
+    </div>
+
+    <div class="popup" id="popup21">
+        <div class="popup-header">
+            <h2>Анализ крови от 16.12.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_161224.jpg" alt="Image 1">
+        </div>
+    </div>
+
+    <div class="popup" id="popup22">
+        <div class="popup-header">
+            <h2>Анализы крови от 22.01.2025</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="bloodtest_220125_1.jpg" alt="Image 1">
+            <img src="bloodtest_220125_2.jpg" alt="Image 2">
+            <img src="bloodtest_220125_3.jpg" alt="Image 3">
+            <img src="bloodtest_220125_4.jpg" alt="Image 4">
+        </div>
+    </div>
+
+    <div class="popup" id="popup23">
+        <div class="popup-header">
+            <h2>ЭХОкг от 22.01.2025</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="echo_220125_1.jpg" alt="Image 1">
+            <img src="echo_220125_2.jpg" alt="Image 2">
+            <img src="echo_220125_3.jpg" alt="Image 3">
+        </div>
+    </div>
+
+    <div class="popup" id="popup24">
+        <div class="popup-header">
+            <h2>УЗИ от 22.01.2025</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="uzi_220125_1.jpg" alt="Image 1">
+            <img src="uzi_220125_2.jpg" alt="Image 2">
+            <img src="uzi_220125_3.jpg" alt="Image 3">
+        </div>
+    </div>
+
+    <div class="popup" id="popup25">
+        <div class="popup-header">
+            <h2>Анализы крови от 14.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_140824_1.jpg" alt="Image 1">
+            <img src="oak_140824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="popup" id="popup26">
+        <div class="popup-header">
+            <h2> от 04.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_040824_1.jpg" alt="Image 1">
+            <img src="oak_040824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="popup" id="popup27">
+        <div class="popup-header">
+            <h2> от 04.08.2024</h2>
+            <span class="close-btn" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content">
+            <img src="oak_040824_1.jpg" alt="Image 1">
+            <img src="oak_040824_2.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <script>
+        function openPopup(popupNumber) {
+            document.querySelector('.overlay').style.display = 'block';
+            const popup = document.getElementById('popup' + popupNumber);
+            popup.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            resetPopupScroll(popup); // Сбросить прокрутку
+        }
+
+        function closePopup() {
+            document.querySelector('.overlay').style.display = 'none';
+            const popups = document.querySelectorAll('.popup');
+            popups.forEach(popup => {
+                popup.style.display = 'none';
+            });
+            document.body.style.overflow = 'auto';
+        }
+
+        function resetPopupScroll(popup) {
+            const popupContent = popup.querySelector('.popup-content');
+            popupContent.scrollTop = 0; // Сброс прокрутки
+        }
+
+        // Закрытие попапа при клике вне его
+        document.querySelector('.overlay').addEventListener('click', closePopup);
+
+        // Отключаем прокрутку страницы, когда попап открыт
+        document.body.addEventListener('wheel', function (e) {
+            if (document.body.style.overflow === 'hidden') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Прокрутка только внутри попапа
+        const popupContents = document.querySelectorAll('.popup-content');
+        popupContents.forEach(popupContent => {
+            popupContent.addEventListener('wheel', function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>
